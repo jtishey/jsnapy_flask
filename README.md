@@ -13,7 +13,6 @@ Flask app interface for JSNAPy (Junos Snapshot Administrator)
 1. Copy the yaml files from the `./scripts/jsnapy_flask/testfiles` direcotry to `/etc/jsnapy/testfiles/`
 2. Edit `/etc/jsnapy/jsnapy.cfg` to point the testfiles directory to where you have `./scripts/jsnapy_flask/testfiles`
 <br>
-<br>
 
 #### Edit the scripts/jsnapy_flask/device_template.yml file to edit credentials and which testfiles to run.
 
