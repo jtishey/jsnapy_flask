@@ -1,6 +1,6 @@
 # jsnapy_flask
-Flask app interface for JSNAPy (Junos Snapshot Administrator)
- (Only tested on Ubuntu)
+Flask app interface for JSNAPy (Junos Snapshot Administrator)<br>
+*Only tested on Ubuntu/Debian-based Linux distros.*
 
 ### Requires python2.7, Flask, flask-wtf, & jsnapy
 `sudo apt-get install build-essential libssl-dev libffi-dev python-dev` <br>
@@ -25,5 +25,5 @@ Flask app interface for JSNAPy (Junos Snapshot Administrator)
 4. Click on each section to expand
 <br>
 
-Still very much a work in progress / weekend project.
+Still very much a gnarly work in progress / weekend project.
 <br>
