@@ -90,6 +90,8 @@
             url: "./jsnapy_flask",
             data: $('form').serialize(),
             type: 'POST',
+            error: function(){ $.LoadingOverlay("hide"); },
+            timeout: 30000,
             success: function(response) {
                 $.LoadingOverlay("hide");
                 if (response.error != "") {
