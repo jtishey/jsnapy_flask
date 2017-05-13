@@ -15,5 +15,17 @@ Flask app interface for JSNAPy (Junos Snapshot Administrator)
 <br>
 
 #### Edit the scripts/jsnapy_flask/device_template.yml file to edit credentials and which testfiles to run.
+<br>
+
+#### To run pre and post change snapshots;
+1. Take a pre-change snapshot by entering a hostnaame/IP, selecting Pre, and clicking Submit.
+2. Take a post-change snapshot by entering the same hostname/IP, selecting Post, and clicking Submit.
+⋅⋅* Once the post snapshot is complete, it will be compared with the pre-change snapshot and output displayed.
+⋅⋅* Passed tests are green - Indicates all tests passed for the given command
+⋅⋅* Failed tests are red - Indicates a change between the pre/post check
+⋅⋅* Skipped tests are grey - Indicates the test is not applicable to the current config
+3. Click on each section to expand
+<br>
 
 Still very much a work in progress / weekend project.
+<br>
