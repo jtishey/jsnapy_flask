@@ -1,0 +1,28 @@
+{% include "menu.html" %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Proof of Concept Flask site">
+    <meta name="author" content="John Tishey">
+    <title>IP Engineering</title>
+
+    <link href="{{ url_for('static', filename='css/bootstrap.main.css') }}" rel="stylesheet">
+
+    <script src="{{ url_for('static', filename='js/jquery-2.2.0.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/loadingoverlay.min.js') }}"></script>
+  </head>
+
+  <body>  
+    <div class="container">
+
+    {% block menu %}    {% endblock %}
+    {% block content %} {% endblock %}
+
+    </div>
+  </body>
+</html>

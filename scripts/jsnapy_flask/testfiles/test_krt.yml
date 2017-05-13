@@ -1,0 +1,12 @@
+tests_include:
+  - show_krt_state
+
+show_krt_state:
+  - command:  show krt state
+  - ignore-null: True
+  - item:
+      xpath: krt-queue-state
+      tests:
+        - is-equal: krtq-operations-queued, 0
+          err: 'FAILED!  Number of KRT operations queued is {{post["krtq-operations-queued"]}}'
+          info: 'PASSED!  Number of KRT operations queued is OK @ {{post["krtq-operations-queued"]}}'

@@ -1,0 +1,17 @@
+test_interface_state:
+  - command: show interfaces terse 
+  - iterate:
+      xpath: physical-interface
+      id: './name'
+      tests:
+        - no-diff: oper-status 
+          err: "Test Failed!! oper-status for {{id_0}} is no longer {{pre['oper-status']}}"
+          info: "Test Passed!! oper-status for {{id_0}} matches the pre-check" 
+
+  - iterate:
+      xpath: physical-interface/logical-interface
+      id: './name'
+      tests:
+        - no-diff: oper-status 
+          err: "Test Failed!! oper-status for {{id_0}} is no longer {{pre['oper-status']}}"
+          info: "Test Passed!! oper-status for {{id_0}} matches the pre-check" 

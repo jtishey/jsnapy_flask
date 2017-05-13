@@ -1,0 +1,13 @@
+tests_include:
+  - show_lacp_interfaces
+
+show_lacp_interfaces:
+  - command: show lacp interfaces
+  - ignore-null: True
+  - iterate:
+      xpath: lacp-interface-information/lag-lacp-protocol
+      id: name
+      tests:
+        - no-diff: lacp-mux-state
+          err: "FAILED!  Interface {{id_0}} LACP status was {{post['lacp-mux-state']}}, and is now {{post['lacp-mux-state']}}"
+          info: "PASSED!  Interface {{id_0}} LACP status is still {{post['lacp-mux-state']}}"

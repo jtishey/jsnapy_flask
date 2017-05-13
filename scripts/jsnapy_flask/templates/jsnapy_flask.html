@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<link href="{{ url_for('jsnapy_flask.static', filename='css/jsnapy_flask.css') }}" rel="stylesheet">
+
+<div class="row">
+    <div class="col-md-3" align="left">
+        <img id="OSImg1" alt="vendor" src="{{ url_for('static', filename='images/junos.jpg') }}" class="img-circle" height="200" width="300">
+    </div>
+    
+    <div class="col-md-6">
+        <form data-toggle="validator" role="form" method="post" onsubmit="myFunction()">
+            <div class="form-group" >
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
+            </div>
+            <div class="form-group">
+                <label for="Hostname">Router Hostname</label>
+                {{ form.hostname(class="form-control input_fields") }}
+            </div>
+
+            <div class="form-group">
+                <div class="btn-group btn-toggle"> 
+                  <button class="btn btn-primary active" id="pre_toggle" type="button">Pre</button>
+                  <button class="btn btn-default" id="post_toggle" type="button">Post</button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <input type="hidden" name="snap" id="snap" value="pre" />
+            </div>
+
+            <div class="form-group">
+                <button class="btn btn-primary btn-large" id="submit_form" name="submit_form" type="button">
+                    Submit
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-3"></div>
+</div>
+
+<br><br><br><br>
+
+<div class="row">
+    <div class="col-md-12">
+        <div id="output_div">
+        </div>
+    </div>
+</div>
+
+<br><br><p></p><br><br>
+
+<script>
+    $(document).ready(function(){
+        // Define input placeholders because I don't know how to pass them with WTF-Forms
+        $('#hostname').attr('placeholder', 'Hostname');
+
+  // Toggle button for Pre vs Post
+    $('.btn-toggle').click(function() {
+        $(this).find('.btn').toggleClass('active');  
+    
+        if ($(this).find('.btn-primary').size()>0) {
+            $(this).find('.btn').toggleClass('btn-primary');
+        }
+        if ($(this).find('.btn-danger').size()>0) {
+            $(this).find('.btn').toggleClass('btn-danger');
+        }
+        if ($(this).find('.btn-success').size()>0) {
+            $(this).find('.btn').toggleClass('btn-success');
+        }
+        if ($(this).find('.btn-info').size()>0) {
+            $(this).find('.btn').toggleClass('btn-info');
+        }
+    
+        $(this).find('.btn').toggleClass('btn-default');
+    
+        if ($('#pre_toggle').hasClass("active")) {
+            $('#snap').val('pre');
+        } else {
+            $('#snap').val('post')
+        }
+        return false;
+        });
+
+
+    $('#submit_form').click(function () {
+        // start showing loading animation
+            $.LoadingOverlay("show");
+        $.ajax({
+            url: "./jsnapy_flask",
+            data: $('form').serialize(),
+            type: 'POST',
+            success: function(response) {
+                $.LoadingOverlay("hide");
+                if (response.error != "") {
+                    $('#output_div').html(response.error)
+                } else {
+                    $('#output_div').html(response.data)
+                }
+            }
+        });
+    });
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,12 @@
+ts_include:
+  - show_ldp_interface
+
+show_ldp_interface:
+  - command:  show ldp interface
+  - iterate:
+      xpath: //ldp-interface[normalize-space(interface-name)!='lo0.0']
+      id: interface-name
+      tests:
+        - is-equal: ldp-neighbor-count, 1
+          info: "PASSED! Interface {{id_0}} LDP neighbor count  {{post['ldp-neighbor-count']}}"
+          err: "FAILED! Interface {{id_0}} LDP neighbor count {{post['ldp-neighbor-count']}}"

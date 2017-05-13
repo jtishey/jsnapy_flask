@@ -1,0 +1,13 @@
+tests_include:
+  - show_pim_interfaces
+
+show_pim_interfaces:
+  - command:  show pim interfaces
+  - ignore-null: True
+  - iterate:
+      xpath: pim-interface[normalize-space(pim-interface-name)!='lo0.0']
+      id: pim-interface-name
+      tests:
+        - no-diff: neighbor-count
+          err: 'FAILED!  Interface {{id_0}} PIM neighbor count {{post["neighbor-count"]}}'
+          info: 'PASSED!  Interface {{id_0}} PIM neighbor count {{post["neighbor-count"]}}'

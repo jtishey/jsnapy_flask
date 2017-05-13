@@ -1,0 +1,31 @@
+tests_include:
+  - show_chassis_fpc
+
+show_chassis_fpc:
+  - command: show chassis fpc
+#Iterate through all FPC
+  - iterate:
+      xpath: //fpc
+      id: './slot'
+      tests:
+        - is-in: state, Online, Empty
+          err: 'FAILED!  ERROR: FPC slot {{id_0}} state {{post["state"]}}'
+          info: 'PASSED!  FPC slot {{id_0}} state {{post["state"]}}'
+
+#Iterate through online FPC
+  - iterate:
+      xpath: //fpc[normalize-space(state)='Online']
+      id: 'slot'
+      tests:
+        - is-lt: memory-heap-utilization, 50
+          err: 'FAILED!  FPC slot {{id_0}} heap utilization is >50% @ {{post["memory-heap-utilization"]}}'
+          info: 'PASSED!  FPC slot {{id_0}} heap utilization is OK @ {{post["memory-heap-utilization"]}}'
+
+        - is-lt: memory-buffer-utilization, 50
+          err: 'FAILED!  FPC slot {{id_0}} buffer utilization is >50% @ {{post["memory-buffer-utilization"]}}'
+          info: 'PASSED!  FPC slot {{id_0}} buffer utilization is OK @ {{post["memory-buffer-utilization"]}}'
+
+        - is-lt: cpu-total, 30
+          err: 'FAILED!  FPC slot {{id_0}} CPU utilization is 30% @ {{post["cpu-total"]}}'
+          info: 'PASSED!  FPC slot {{id_0}} CPU utilization is OK @ {{post["cpu-total"]}}'
+

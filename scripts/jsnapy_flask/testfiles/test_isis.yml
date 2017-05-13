@@ -1,0 +1,28 @@
+tests_include:
+  - isis-adjacency
+  - isis-interface
+
+isis-adjacency:
+  - command: show isis adjacency
+  - ignore-null: True
+  - iterate:
+      xpath: 'isis-adjacency'
+      id: interface-name
+      tests:
+        - no-diff: adjacency-state
+          err: 'FAILED! ISIS adjacency on interface {{id_0}} does not match the pre-check'
+          info: 'PASSED! ISIS adjacency to {{pre["system-name"]}} on interface {{id_0}} is still {{pre["adjacency-state"]}}'
+
+isis-interface:
+  - command: show isis interface
+  - ignore-null: True
+  - iterate:
+      xpath: /isis-interface-information/isis-interface[normalize-space(interface-name)!='lo0.0']
+      id: interface-name
+      tests:
+        - no-diff: metric-one
+          err: 'FAILED!   ISIS interface {{id_0}} L1 metric changed from {{pre["metric-one"]}} to {{post["metric-one"]}}'
+          info: 'PASSED!  ISIS interface {{id_0}} L1 metric {{post["metric-one"]}} matches pre-check'
+        - no-diff: metric-two
+          err: 'FAILED!   ISIS interface {{id_0}} L2 metric changed from {{pre["metric-two"]}} to {{post["metric-two"]}}'
+          info: 'PASSED!  ISIS interface {{id_0}} L2 metric {{post["metric-two"]}} matches pre-check'

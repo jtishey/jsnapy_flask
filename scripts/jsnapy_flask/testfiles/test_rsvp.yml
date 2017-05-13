@@ -1,0 +1,20 @@
+tests_include:
+  - rsvp-interface
+
+rsvp-interface:
+  - command: show rsvp interface
+  - ignore-null: True
+  - iterate:
+      xpath: 'rsvp-interface'
+      tests:
+        - no-diff: rsvp-status
+          err: 'FAILED!  Interface {{pre["interface-name"]}} state is {{post["rsvp-status"]}}, before it was {{pre["rsvp-status"]}}'
+          info: 'PASSED!  Interface {{pre["interface-name"]}} state is still {{post["rsvp-status"]}}'
+
+  - iterate:
+      xpath: '//rsvp-interface-information/rsvp-interface/rsvp-telink'
+      id: subscription
+      tests:
+        - no-diff: subscription 
+          err: 'FAILED!  RSVP interface {{pre["interface-name"]}} has {{post["active-reservation"]}} active-reservations, before it had {{pre["active-reservation"]}}'
+          info: 'PASSED!  RSVP interface {{pre["interface-name"]}} still has {{pre["active-reservation"]}} active-reservations'

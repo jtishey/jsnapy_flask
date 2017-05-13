@@ -1,0 +1,20 @@
+hosts:
+  - device: SOME_HOST 
+    username: guest
+    passwd: password
+    #port: 22
+tests:
+  - test_bgp.yml
+  - test_fpc.yml
+  - test_pic_status.yml
+  - test_interfaces.yml
+  - test_isis.yml
+  - test_ldp.yml
+  - test_bfd.yml
+  - test_rsvp.yml
+  - test_lacp.yml
+  - test_pim.yml
+  - test_msdp.yml
+  - test_core.yml
+  - test_krt.yml
+  - test_alarms.yml

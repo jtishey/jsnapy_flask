@@ -1,0 +1,40 @@
+<body>
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+
+            <div class="jumbotron" style="overflow:hidden; background-color:rgba(220,220,220,0.8)">
+
+                <h2>
+                    IP Engineering Tools
+                </h2>
+
+                <p>
+                    {% if active_page == 'index' %}
+                        Collection of IP Engineering tools/scripts.
+                    {% elif active_page == 'jsnapy' %}
+                        Enter a Juniper device hostname or IP and select Pre/Post to take a snapshot.
+                    {% endif %}
+                </p>
+            </div>
+            <ul class="nav nav-tabs">
+                {% if active_page == 'index' %}
+                    <li class ="active">
+                {% else %}
+                   <li>
+                {% endif %}
+                    <a href="index">Home</a>
+                </li>
+
+                {% if active_page == 'jsnapy' %}
+                    <li class ="active">
+                {% else %}
+                    <li>
+                {% endif %}
+                    <a href="./jsnapy_flask">Juniper Snapshot</a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+<br><br>

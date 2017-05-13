@@ -1,0 +1,13 @@
+tests_include:
+  - show_msdp
+
+show_msdp:
+  - command:  show msdp
+  - ignore-null: True
+  - iterate:
+      xpath: msdp-peer
+      id: msdp-peer-address
+      tests:
+        - no-diff: msdp-state
+          err: 'FAILED!  MSDP peer {{id_0}} is {{pre["msdp-state"]}}, and is now {{post["msdp-state"]}}'
+          info: 'PASSED!  MSDP peer {{id_0}} is still {{post["msdp-state"]}}'

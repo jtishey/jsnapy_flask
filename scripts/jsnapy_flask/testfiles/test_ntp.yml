@@ -1,0 +1,12 @@
+tests_include:
+  - show_ntp_status
+
+show_ntp_status:
+  - command: show ntp status
+  - item:
+      xpath: //output
+      id: .
+      tests:
+        - contains: ., sync_ntp
+          err: 'NTP: ERROR: NTP is not in sync'
+          info: 'NTP: NTP is in sync'

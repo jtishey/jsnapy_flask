@@ -1,0 +1,12 @@
+tests_include:
+  - check_core
+
+check_core:
+  - command: show system core-dumps
+  - iterate:
+      xpath: //directory-list
+      tests:
+        - not-exists: ./directory/file-information/file-name 
+          err: "FAILED!  Core file exist <{{post['./directory/file-information/file-name']}}>"
+          info: "PASSED!  There are no core files"
+

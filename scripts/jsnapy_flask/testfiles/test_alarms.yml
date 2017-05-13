@@ -1,0 +1,23 @@
+tests_include:
+  - show_chassis_alarms
+  - show_system_alarms
+
+show_chassis_alarms:
+  - command: show chassis alarms
+  - iterate:
+      xpath: alarm-summary[boolean(no-active-alarms)] | alarm-detail
+      tests:
+        - not-exists: alarm-description
+          err: 'FAILED!  There are chassis alarms: {{post["alarm-description"]}}'
+          info: 'PASSED!  There are no chassis alarms'
+
+
+show_system_alarms:
+  - command: show system alarms
+  - iterate:
+      xpath: alarm-summary[boolean(no-active-alarms)] | alarm-detail
+      tests:
+        - not-exists: alarm-description
+          err: 'FAILED!  There are system alarms: {{post["alarm-description"]}}'
+          info: 'PASSED!  There are no system alarms'
+      

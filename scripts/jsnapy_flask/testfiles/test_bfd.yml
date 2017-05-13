@@ -1,0 +1,13 @@
+tests_include:
+  - check_bfd
+
+check_bfd:
+  - command:  show bfd session
+  - ignore-null: True
+  - iterate:
+      xpath: bfd-session
+      id: session-neighbor
+      tests:
+        - no-diff: session-state
+          err: 'FAILED!  Session {{id_0}} interface {{post["session-interface"]}} was {{pre["session-state"]}}, and is now {{post["session-state"]}}'
+          info: 'PASSED!  Session {{id_0}} interface {{post["session-interface"]}} is still {{pre["session-state"]}}'
