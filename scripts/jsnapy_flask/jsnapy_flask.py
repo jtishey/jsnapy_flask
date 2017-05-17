@@ -37,12 +37,10 @@ class Run_JSNAPy:
 
     def make_dev_file(self):
         """ Create a yaml file with the host specified and login creds  """
-        # Should look and see if a string is usable instead
         with open('./scripts/jsnapy_flask/device_template.yml') as f1:
-            template = f1.read()
-        template = template.replace('SOME_HOST', self.host)
-        with open('./scripts/jsnapy_flask/devices.yml', 'w') as f2:
-            f2.write(template)
+            self.template = f1.read()
+        self.template = self.template.replace('SOME_HOST', self.host)
+        self.template = str(self.template)
 
     def route_args(self):
         """ Determines if the user wants a pre-check or post-check """
@@ -55,7 +53,7 @@ class Run_JSNAPy:
         """ Run pre-change snapshot """
         js = SnapAdmin()
         try:
-            self.pre_snap = js.snap("./scripts/jsnapy_flask/devices.yml", "pre")
+            self.pre_snap = js.snap(self.template, "pre")
             self.data = 'Pre-check snapshot complete'
             self.review = ""
         except:
@@ -66,37 +64,20 @@ class Run_JSNAPy:
         """ Run post-change snapshot and compare with pre """
         js = SnapAdmin()
         try:
-            self.post_snap = js.snap("./scripts/jsnapy_flask/devices.yml", "post")
+            self.post_snap = js.snap(self.template, "post")
         except:
             self.error = "Error running snapshot"
             return
         with open('/var/log/jsnapy/jsnapy.log') as f1:
             pre_log = f1.readlines()
-        self.result = js.check("./scripts/jsnapy_flask/devices.yml",
-                               pre_file="pre", post_file="post")
-        self.get_results(pre_log)
+        self.result = js.check(self.template, pre_file="pre", post_file="post")
 
-    def get_results(self, pre_log):
-        """" Get the post chek output as post_log """
+        # Get the post chek output as post_log
         with open('/var/log/jsnapy/jsnapy.log') as f1:
             post_log = f1.readlines()
         for line in pre_log:
             post_log.pop(0)
         self.format_results(post_log)
-
-    def line_filter(self, line):
-        """ Filter lines with specific words """
-        blacklist = ['** Device', '--Performing ', 'Tests Included',
-                     'jnpr.jsnapy', 'ID gone missing', 'ID list']
-        skip_line = False
-        if line == '':
-            skip_line = True
-        else:
-            for key in blacklist:
-                if key in line:
-                    skip_line = True
-
-        return skip_line
 
     def format_results(self, post_log):
         """ Do some output formatting based on verbosity and readability """
@@ -105,12 +86,25 @@ class Run_JSNAPy:
             line = re.sub('\\x1b\[.{1,2}m', '', line)
             if 'Nodes are not present in given Xpath' in line:
                 line = line.replace('Nodes are not present in given Xpath:', 'No info found for the given criteria')
-            skip_line = self.line_filter(line)
+            skip_line = line_filter(line)
             if skip_line is False:
                 line = line + '<br>'
                 self.data = self.data + line
         self.data = format_html.output(self.data)
-        os.remove("./scripts/jsnapy_flask/devices.yml")
+
+
+def line_filter(line):
+    """ Filter lines with specific words """
+    blacklist = ['** Device', '--Performing ', 'Tests Included',
+                 'jnpr.jsnapy', 'ID gone missing', 'ID list']
+    skip_line = False
+    if line == '':
+        skip_line = True
+    else:
+        for key in blacklist:
+            if key in line:
+                skip_line = True
+    return skip_line
 
 
 # FLASK SECTION - Blueprint and Route - #
