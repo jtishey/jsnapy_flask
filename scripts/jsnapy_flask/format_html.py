@@ -1,6 +1,7 @@
 import re
 
-def format(post_log):
+
+def formatting(post_log):
     """ Do some output formatting for jsnapy_flask based on verbosity and readability """
     data = ""
     for line in post_log:
@@ -44,7 +45,7 @@ def html_output(data):
     # Determine if the command passed, failed, or skipped
     # Also reorder test result to the top
     for k in section:
-        status = 'PASS'
+        status = ''
         p = 0
         f = 0
         for i, line in enumerate(section[k]):
@@ -54,14 +55,18 @@ def html_output(data):
                 section[k].insert(1, q)
                 f += 1
             elif 'PASS ' in line:
+                if status != 'FAIL':
+                    status = 'PASS'
                 q = section[k].pop(i)
                 p += 1
                 section[k].insert(p, q)
                 p = i
             elif 'SKIPPING' in line:
-                status = 'SKIP'
+                if status != 'FAIL' and status != 'PASS':
+                    status = 'SKIP'
             elif 'Final Result' in line:
                 status = 'FINAL'
+                break
         section[k].insert(0, '<div class="' + status.lower() + '-main">')
         if status == 'FAIL':
             section[k].insert(2 + f, '<div class="' + status.lower() + '-child">')
