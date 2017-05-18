@@ -31,7 +31,7 @@ class Run_JSNAPy:
         self.data = ""
         self.error = ""
         self.review = ""
-        # Create the devices.yml file for jsnapy
+        # Create the yaml config for jsnapy
         self.make_dev_file()
         # Run pre/post snapshot
         self.route_args()
@@ -103,7 +103,6 @@ class Run_JSNAPy:
             if skip_line is False:
                 line = line + '<br>\n'
                 self.data = self.data + line
-        print self.data
         self.data = format_html.output(self.data)
 
 
