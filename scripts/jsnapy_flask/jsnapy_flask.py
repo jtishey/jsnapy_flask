@@ -7,6 +7,7 @@ github.com/jtishey/jsnapy_flask  2017
 
 import os
 import re
+import logging
 from flask import Blueprint, jsonify, render_template, request
 from jnpr.jsnapy import SnapAdmin
 import format_html
@@ -36,7 +37,7 @@ class Run_JSNAPy:
         self.route_args()
 
     def make_dev_file(self):
-        """ Create a yaml file with the host specified and login creds  """
+        """ Create yaml config with the host specified and login creds  """
         with open('./scripts/jsnapy_flask/device_template.yml') as f1:
             self.template = f1.read()
         self.template = self.template.replace('SOME_HOST', self.host)
@@ -68,15 +69,27 @@ class Run_JSNAPy:
         except:
             self.error = "Error running snapshot"
             return
-        with open('/var/log/jsnapy/jsnapy.log') as f1:
-            pre_log = f1.readlines()
+        self.post_compare()
+
+    def post_compare(self):
+        """ Run post check and gather output """
+        # Setup a memory buffer to capture logging messages from jsnapy
+        jsnapy_log = logging.handlers.MemoryHandler(1024*10, logging.DEBUG)
+        jsnapy_log.setLevel(logging.DEBUG)
+        log = logging.getLogger()
+        log.setLevel(logging.DEBUG)
+        debug_format = logging.Formatter("%(message)")
+        jsnapy_log.setFormatter(debug_format)
+        log.addHandler(jsnapy_log)
+
+        # Run jsnapy check on pre and post snapshots
+        js = SnapAdmin()
         self.result = js.check(self.template, pre_file="pre", post_file="post")
 
-        # Get the post chek output as post_log
-        with open('/var/log/jsnapy/jsnapy.log') as f1:
-            post_log = f1.readlines()
-        for line in pre_log:
-            post_log.pop(0)
+        # Gather output from buffer
+        post_log = []
+        for line in jsnapy_log.buffer:
+            post_log.append(str(line.getMessage()))
         self.format_results(post_log)
 
     def format_results(self, post_log):
@@ -88,8 +101,9 @@ class Run_JSNAPy:
                 line = line.replace('Nodes are not present in given Xpath:', 'No info found for the given criteria')
             skip_line = line_filter(line)
             if skip_line is False:
-                line = line + '<br>'
+                line = line + '<br>\n'
                 self.data = self.data + line
+        print self.data
         self.data = format_html.output(self.data)
 
 

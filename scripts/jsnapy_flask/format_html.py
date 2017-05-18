@@ -41,8 +41,8 @@ def output(data):
     result = ""
     for k in section:
         for line in section[k]:
-            if '***********' in line:
-                line = line.replace('<br>', '')
+            #if '***********' in line:
+            #    line = line.replace('<br>', '')
             result = result + line
 
     result = result + '<script type="text/javascript" src="/jsnapy_flask/static/js/jsnapy_flask.js"></script>'
