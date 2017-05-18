@@ -96,7 +96,7 @@ class Run_JSNAPy:
         post_log = []
         for line in jsnapy_log.buffer:
             post_log.append(str(line.getMessage()))
-        self.data = format_html.format(post_log)
+        self.data = format_html.formatting(post_log)
 
 
 # FLASK SECTION - Blueprint and Route - #
