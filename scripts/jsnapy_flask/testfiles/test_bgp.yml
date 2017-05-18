@@ -1,19 +1,13 @@
 tests_include:
-    - bgp-overview
+  - bgp-overview
 
 bgp-overview:
-    - command: show bgp summary
-    - ignore-null: True
-    - iterate:
-        xpath: bgp-peer
-        id: peer-address, description
-        tests:
-          - no-diff: peer-state
-            info: "PASSED! BGP peer {{id_0}} ({{id_1}}) is  {{post['peer-state']}}"
-            err: "FAILED! BGP peer {{id_0}} ({{id_1}}) is {{post['peer-state']}}, was {{pre['peer-state']}}"
-          - list-not-less: peer-address
-            info: "PASSED! BGP has the same number of peers"
-            err: "FAILED! The BGP peer {{id_0}} ({{id_1}}) is now missing"
-          - list-not-more: peer-address
-            info: "PASSED! BGP has the same number of peers"
-            err: "FAILED! The BGP peer {{id_0}} ({{id_1}}) is has been added"
+  - command:  show bgp summary
+  - ignore-null: True
+  - iterate:
+      xpath: bgp-peer
+      id: peer-address
+      tests:
+        - no-diff: peer-state
+          info: "PASSED! BGP peer {{id_0}} is  {{post['peer-state']}}"
+          err: "FAILED! BGP peer {{id_0}} is  {{post['peer-state']}}, was {{pre['peer-state']}}"

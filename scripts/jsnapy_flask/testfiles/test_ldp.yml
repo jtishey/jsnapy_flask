@@ -1,4 +1,4 @@
-ts_include:
+tests_include:
   - show_ldp_interface
 
 show_ldp_interface:
