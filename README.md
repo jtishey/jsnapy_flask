@@ -4,7 +4,10 @@ Flask web app for Juniper JSNAPy (Junos Snapshot Administrator).  Allows you to 
 *Only tested on Ubuntu/Debian-based Linux distros.*
 
 <br>
-![Alt text](https://github.com/jtishey/jsnapy_flask/blob/master/static/images/jsnapy_flask_pic.png)
+[screenshot2](https://github.com/jtishey/jsnapy_flask/blob/master/static/images/jsnapy_flask_pic.png)
+[screenshot2](blob/master/static/images/jsnapy_flask_pic.png)
+[screenshot3](static/images/jsnapy_flask_pic.png)
+[screenshot4](https://github.com/jtishey/jsnapy_flask/static/images/jsnapy_flask_pic.png)
 <br>
 
 
