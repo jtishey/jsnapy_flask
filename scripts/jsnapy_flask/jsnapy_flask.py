@@ -2,7 +2,7 @@
 """
 Run Juniper Snapshot Admin (python) via HTML
 Requires JSNAPy, falsk, flask-wtf, probably other stuff
-github.com/jtishey/ipeng_site  2017
+github.com/jtishey/jsnapy_flask  2017
 """
 
 import logging
@@ -40,13 +40,13 @@ class Run_JSNAPy:
     def make_dev_file(self):
         """ Create yaml config with the host specified and login creds  """
         # login loads slow, so leave the inport buried here to keep it from running all the time
-        from logintoken import login
-        os.chdir("/var/www/FlaskApp/FlaskApp/scripts/jsnapy_flask/")
-        with open('device_template.yml') as f1:
+        #from logintoken import login
+        #os.chdir("/var/www/FlaskApp/FlaskApp/scripts/jsnapy_flask/")
+        with open('./scripts/jsnapy_flask/device_template.yml') as f1:
             self.template = f1.read()
         self.template = self.template.replace('SOME_HOST', self.host)
-        self.template = self.template.replace('SOME_USER', login['user'])
-        self.template = self.template.replace('SOME_PASS', login['pass'])
+        #self.template = self.template.replace('SOME_USER', login['user'])
+        #self.template = self.template.replace('SOME_PASS', login['pass'])
         self.template = str(self.template)
 
     def route_args(self):
