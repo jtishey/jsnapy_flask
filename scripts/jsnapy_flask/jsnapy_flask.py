@@ -2,17 +2,18 @@
 """
 Run Juniper Snapshot Admin (python) via HTML
 Requires JSNAPy, falsk, flask-wtf, probably other stuff
-github.com/jtishey/jsnapy_flask  2017
+github.com/jtishey/ipeng_site  2017
 """
 
-import os
-import re
 import logging
+import os
+
 from flask import Blueprint, jsonify, render_template, request
-from jnpr.jsnapy import SnapAdmin
-import format_html
 from flask_wtf import FlaskForm
+from jnpr.jsnapy import SnapAdmin
 from wtforms import StringField, validators
+
+import format_html
 
 
 class JSNAPy_Form(FlaskForm):
@@ -38,9 +39,14 @@ class Run_JSNAPy:
 
     def make_dev_file(self):
         """ Create yaml config with the host specified and login creds  """
-        with open('./scripts/jsnapy_flask/device_template.yml') as f1:
+        # login loads slow, so leave the inport buried here to keep it from running all the time
+        from logintoken import login
+        os.chdir("/var/www/FlaskApp/FlaskApp/scripts/jsnapy_flask/")
+        with open('device_template.yml') as f1:
             self.template = f1.read()
         self.template = self.template.replace('SOME_HOST', self.host)
+        self.template = self.template.replace('SOME_USER', login['user'])
+        self.template = self.template.replace('SOME_PASS', login['pass'])
         self.template = str(self.template)
 
     def route_args(self):
@@ -90,34 +96,7 @@ class Run_JSNAPy:
         post_log = []
         for line in jsnapy_log.buffer:
             post_log.append(str(line.getMessage()))
-        self.format_results(post_log)
-
-    def format_results(self, post_log):
-        """ Do some output formatting based on verbosity and readability """
-        self.data = ""
-        for line in post_log:
-            line = re.sub('\\x1b\[.{1,2}m', '', line)
-            if 'Nodes are not present in given Xpath' in line:
-                line = line.replace('Nodes are not present in given Xpath:', 'No info found for the given criteria')
-            skip_line = line_filter(line)
-            if skip_line is False:
-                line = line + '<br>\n'
-                self.data = self.data + line
-        self.data = format_html.output(self.data)
-
-
-def line_filter(line):
-    """ Filter lines with specific words """
-    blacklist = ['** Device', '--Performing ', 'Tests Included',
-                 'jnpr.jsnapy', 'ID gone missing', 'ID list']
-    skip_line = False
-    if line == '':
-        skip_line = True
-    else:
-        for key in blacklist:
-            if key in line:
-                skip_line = True
-    return skip_line
+        self.data = format_html.format(post_log)
 
 
 # FLASK SECTION - Blueprint and Route - #
