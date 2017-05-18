@@ -1,4 +1,35 @@
-def output(data):
+import re
+
+def format(post_log):
+    """ Do some output formatting for jsnapy_flask based on verbosity and readability """
+    data = ""
+    for line in post_log:
+        line = re.sub('\\x1b\[.{1,2}m', '', line)
+        if 'Nodes are not present in given Xpath' in line:
+            line = line.replace('Nodes are not present in given Xpath:', 'No info found for the given criteria')
+        skip_line = line_filter(line)
+        if skip_line is False:
+            line = line + '<br>\n'
+            data = data + line
+    data = html_output(data)
+    return data
+
+
+def line_filter(line):
+    """ Filter lines with specific words """
+    blacklist = ['** Device', '--Performing ', 'Tests Included',
+                 'jnpr.jsnapy', 'ID gone missing', 'ID list']
+    skip_line = False
+    if line == '':
+        skip_line = True
+    else:
+        for key in blacklist:
+            if key in line:
+                skip_line = True
+    return skip_line
+
+
+def html_output(data):
     """ Format the results for HTML output """
     i = 0
     section = {}
@@ -41,8 +72,6 @@ def output(data):
     result = ""
     for k in section:
         for line in section[k]:
-            #if '***********' in line:
-            #    line = line.replace('<br>', '')
             result = result + line
 
     result = result + '<script type="text/javascript" src="/jsnapy_flask/static/js/jsnapy_flask.js"></script>'
