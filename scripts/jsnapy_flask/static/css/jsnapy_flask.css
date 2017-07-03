@@ -19,3 +19,31 @@
     border-radius: 10px;
     padding: 15px; 
 }
+
+.glyphicon {
+    font-size: 20px;
+    display: inline-block;
+}
+
+#toggle-container-div {
+    width: 100%;
+    overflow: hidden;
+}
+
+#toggle-div {
+    float: left;
+    width: 110px;
+}
+
+#settings-icon-div {
+    float: right;
+    margin-right: 65%;
+}
+
+#settings-div {
+    background:#dddddd;
+    border:1px solid black;
+    border-radius: 10px;
+    padding: 15px;
+    width: 80%;
+}

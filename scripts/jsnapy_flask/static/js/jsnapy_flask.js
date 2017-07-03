@@ -5,6 +5,7 @@ $(document).ready(function(){
     $('.skip-child').hide();
 });
 
+
 $('#output_div').on('click', '.pass-main', function(){
     // Click output div to toggle child div
      $('.pass-child', this).toggle(); // p00f

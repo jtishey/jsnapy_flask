@@ -18,13 +18,23 @@
                 {{ form.hostname(class="form-control input_fields") }}
             </div>
 
-            <div class="form-group">
-                <div class="btn-group btn-toggle"> 
-                  <button class="btn btn-primary active" id="pre_toggle" type="button">Pre</button>
-                  <button class="btn btn-default" id="post_toggle" type="button">Post</button>
+            <div class="form-group" id="toggle-container-div">
+                <div class="btn-group btn-toggle" id="toggle-div">
+                    <button class="btn btn-primary active" id="pre_toggle" type="button">Pre</button>
+                    <button class="btn btn-default" id="post_toggle" type="button">Post</button>
+                </div>
+                <div id="settings-icon-div">
+                    <button type="button" class="btn btn-default" id="settings">
+                        <span class="glyphicon glyphicon-cog"></span>
+                    </button>
                 </div>
             </div>
-
+            <div id="settings-div">
+                Username: #####<br>
+                Password: #####<br>
+                <br>
+                SAVE
+            </div>
             <div class="form-group">
                 <input type="hidden" name="snap" id="snap" value="pre" />
             </div>
@@ -54,6 +64,7 @@
     $(document).ready(function(){
         // Define input placeholders because I don't know how to pass them with WTF-Forms
         $('#hostname').attr('placeholder', 'Hostname');
+        $('#settings-div').hide()
 
   // Toggle button for Pre vs Post
     $('.btn-toggle').click(function() {
@@ -82,6 +93,9 @@
         return false;
         });
 
+    $('#settings').click(function () {
+        $('#settings-div').toggle(500)
+    });
 
     $('#submit_form').click(function () {
         // start showing loading animation
