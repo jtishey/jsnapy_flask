@@ -47,3 +47,13 @@
     padding: 15px;
     width: 80%;
 }
+
+.settings_input1 {
+    width: 50%;
+    float: left;
+}
+
+.settings_input2 {
+    float: right;
+    width: 50%;
+}

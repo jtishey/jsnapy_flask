@@ -15,7 +15,7 @@
             </div>
             <div class="form-group">
                 <label for="Hostname">Router Hostname</label>
-                {{ form.hostname(class="form-control input_fields") }}
+                {{ form.hostname(class="form-control input_fields", placeholder="Hostname") }}
             </div>
 
             <div class="form-group" id="toggle-container-div">
@@ -29,12 +29,22 @@
                     </button>
                 </div>
             </div>
+
             <div id="settings-div">
-                Username: #####<br>
-                Password: #####<br>
+                <div id="settings_login">
+                    {{ form.username(class="form-control input_fields settings_input1", placeholder="Username") }}
+                    {{ form.password(class="form-control input_fields settings_input2", placeholder="Password") }}
+                </div>
+                <div id="settings_tests">
+                    {{ form.test_files(class="form-control") }}
+                    <i> * CTRL + Click to select tests to run</i><br>
+                </div>
                 <br>
-                SAVE
+                <div id="settings_update">
+                    <button type="button" class="btn btn-primary" id="submit_form">Update</button>
+                </div>
             </div>
+
             <div class="form-group">
                 <input type="hidden" name="snap" id="snap" value="pre" />
             </div>
@@ -62,8 +72,6 @@
 
 <script>
     $(document).ready(function(){
-        // Define input placeholders because I don't know how to pass them with WTF-Forms
-        $('#hostname').attr('placeholder', 'Hostname');
         $('#settings-div').hide()
 
   // Toggle button for Pre vs Post

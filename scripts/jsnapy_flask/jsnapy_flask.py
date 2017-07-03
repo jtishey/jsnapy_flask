@@ -11,7 +11,7 @@ import os
 from flask import Blueprint, jsonify, render_template, request
 from flask_wtf import FlaskForm
 from jnpr.jsnapy import SnapAdmin
-from wtforms import StringField, validators
+from wtforms import StringField, PasswordField, SelectMultipleField, validators
 
 import format_html
 
@@ -20,7 +20,16 @@ class JSNAPy_Form(FlaskForm):
     """ Here's your stupid flask form """
     hostname = StringField('Hostname',
                            validators=[validators.DataRequired()])
-
+    username = StringField('username', validators=[validators.DataRequired()])
+    password = PasswordField('password', validators=[validators.DataRequired()])
+    
+    my_choices = []
+    yml_files = os.popen("ls scripts/jsnapy_flask/testfiles/*.yml").read()
+    for i, line in enumerate(yml_files.splitlines(), start=1):
+        line = line.replace('scripts/jsnapy_flask/testfiles/','')
+        my_choices.append((str(i), line))
+    
+    test_files = SelectMultipleField(choices = my_choices, default=range(1, i + 1))
 
 class Run_JSNAPy:
     """ Execute the jsnapy script to snapshot a device """
