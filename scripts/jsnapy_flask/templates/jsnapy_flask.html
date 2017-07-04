@@ -31,17 +31,25 @@
             </div>
 
             <div id="settings-div">
+                <label for="username">Router Credentials</label>
                 <div id="settings_login">
                     {{ form.username(class="form-control input_fields settings_input1", placeholder="Username") }}
                     {{ form.password(class="form-control input_fields settings_input2", placeholder="Password") }}
                 </div>
+                <br><br><br>
+                <div id="settings_location">
+                    <label for="test_location">Test Files Location</label>
+                    <br>
+                    {{ form.test_location(class="form-control input_fields test_location", placeholder="/etc/jsnapy/testfiles/") }}
+                </div>
+                <br>
                 <div id="settings_tests">
+                    <label for="test_files">Test Files</label>
                     {{ form.test_files(class="form-control") }}
-                    <i> * CTRL + Click to select tests to run</i><br>
                 </div>
                 <br>
                 <div id="settings_update">
-                    <button type="button" class="btn btn-primary" id="submit_form">Update</button>
+                    <button type="button" class="btn btn-primary" id="update_settings">Update</button>
                 </div>
             </div>
 
@@ -103,6 +111,17 @@
 
     $('#settings').click(function () {
         $('#settings-div').toggle(500)
+    });
+
+    $('#settings_update').click(function() {
+         $('#settings-div').hide(500)
+        $.ajax({
+            url: "./jsnapy_settings",
+            data: $('form').serialize(),
+            type: 'POST',
+            timeout: 3000,
+            success: alert('SETTINGS UPDATED')
+        });
     });
 
     $('#submit_form').click(function () {

@@ -7,6 +7,7 @@ github.com/jtishey/jsnapy_flask  2017
 
 import logging
 import os
+import re
 
 from flask import Blueprint, jsonify, render_template, request
 from flask_wtf import FlaskForm
@@ -17,46 +18,73 @@ import format_html
 
 
 class JSNAPy_Form(FlaskForm):
-    """ Here's your stupid flask form """
+    """ Create the flask form """
+    with open("scripts/jsnapy_flask/settings.txt") as _f:
+        settings = _f.read()
+    settings = settings.split(',')
+    username_value = settings[0]
+    password_value = settings[1]
+    testfiles_value = settings[2]
+
     hostname = StringField('Hostname',
                            validators=[validators.DataRequired()])
-    username = StringField('username', validators=[validators.DataRequired()])
-    password = PasswordField('password', validators=[validators.DataRequired()])
-    
+    username = StringField('username', validators=[validators.DataRequired()], default=username_value)
+    password = PasswordField('password', validators=[validators.DataRequired()], default=password_value)
+    test_location = StringField('test_location', validators=[validators.DataRequired()], default=testfiles_value)
     my_choices = []
-    yml_files = os.popen("ls scripts/jsnapy_flask/testfiles/*.yml").read()
+    i = 0
+    yml_files = os.popen("ls " + testfiles_value + "*.yml").read()
     for i, line in enumerate(yml_files.splitlines(), start=1):
-        line = line.replace('scripts/jsnapy_flask/testfiles/','')
-        my_choices.append((str(i), line))
-    
+        line = line.replace(testfiles_value, '')
+        my_choices.append((line, line))
     test_files = SelectMultipleField(choices = my_choices, default=range(1, i + 1))
+
 
 class Run_JSNAPy:
     """ Execute the jsnapy script to snapshot a device """
     def __init__(self, args):
         """ Expects args from the flask form: hostname & pre/post tag """
+        with open("scripts/jsnapy_flask/settings.txt") as _f:
+            settings = _f.read()
+        settings = settings.split(',')
+
         # Initalize variables
         self.host = args.form['hostname']
         self.snap = args.form['snap']
+        self.username_value = settings[0]
+        self.password_value = settings[1]
+        self.testlocation_value = settings[2]
+        self.testfiles_value = settings[3]
         self.data = ""
         self.error = ""
         self.review = ""
+
+        # Update config file with testfiles path specified in settings section
+        with open('/etc/jsnapy/jsnapy.cfg') as _f:
+            cfg = _f.read()
+        cfg2 = ""
+        for line in cfg.splitlines():
+            if 'test_file_path = ' in line:
+                line = 'test_file_path = ' + self.testlocation_value
+            cfg2 = cfg2 + line + "\n"
+        with open('/etc/jsnapy/jsnapy.cfg', 'w') as _f:
+            _f.write(cfg2)
+    
         # Create the yaml config for jsnapy
         self.make_dev_file()
+
         # Run pre/post snapshot
         self.route_args()
 
     def make_dev_file(self):
         """ Create yaml config with the host specified and login creds  """
-        # login loads slow, so leave the inport buried here to keep it from running all the time
-        #from logintoken import login
-        #os.chdir("/var/www/FlaskApp/FlaskApp/scripts/jsnapy_flask/")
         with open('./scripts/jsnapy_flask/device_template.yml') as f1:
             self.template = f1.read()
         self.template = self.template.replace('SOME_HOST', self.host)
-        #self.template = self.template.replace('SOME_USER', login['user'])
-        #self.template = self.template.replace('SOME_PASS', login['pass'])
+        self.template = self.template.replace('SOME_USER', self.username_value)
+        self.template = self.template.replace('SOME_PASS', self.password_value)
         self.template = str(self.template)
+        self.template = self.template + self.testfiles_value
 
     def route_args(self):
         """ Determines if the user wants a pre-check or post-check """
@@ -108,9 +136,27 @@ class Run_JSNAPy:
         self.data = format_html.formatting(post_log)
 
 
+class UpdateSettings:
+    """ Update the settings file """
+    def __init__(self, args):
+        """ Expects args from the flask form: Username, Password & Testfiles Path """
+        username = str(args.form['username'])
+        password = str(args.form['password'])
+        test_loc = str(args.form['test_location'])
+        test_files = args.form.getlist('test_files', type=str)
+        test_list = ''
+        for item in test_files:
+            test_list = test_list + '  - ' + item + '\n'
+        jsettings = username + ',' + password + ',' + test_loc + "," + test_list
+        with open('scripts/jsnapy_flask/settings.txt', "w") as _f:
+            _f.write(jsettings)
+
+
 # FLASK SECTION - Blueprint and Route - #
 
 jsnapy_flask_bp = Blueprint('jsnapy_flask', __name__, template_folder='templates', static_folder='static',
+                            static_url_path='/jsnapy_flask/static')
+jsnapy_settings_bp = Blueprint('jsnapy_settings', __name__, template_folder='templates', static_folder='static',
                             static_url_path='/jsnapy_flask/static')
 
 
@@ -129,3 +175,10 @@ def jsnapy_flask():
         return jsonify(results)
     else:
         return ""
+
+
+@jsnapy_settings_bp.route('/jsnapy_settings', methods=['POST'])
+def jsnapy_settings():
+    """ Run Juniper Snapshot Manager on a device """
+    settings = UpdateSettings(request)
+    return ""
