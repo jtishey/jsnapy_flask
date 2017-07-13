@@ -1,6 +1,6 @@
 hosts:
   - device: SOME_HOST 
-    username: guest
-    passwd: password
+    username: SOME_USER
+    passwd: SOME_PASS
     #port: 22
 tests:

@@ -7,7 +7,6 @@ github.com/jtishey/jsnapy_flask  2017
 
 import logging
 import os
-import re
 
 from flask import Blueprint, jsonify, render_template, request
 from flask_wtf import FlaskForm
@@ -37,29 +36,41 @@ class JSNAPy_Form(FlaskForm):
     for i, line in enumerate(yml_files.splitlines(), start=1):
         line = line.replace(testfiles_value, '')
         my_choices.append((line, line))
-    test_files = SelectMultipleField(choices = my_choices, default=range(1, i + 1))
+    test_files = SelectMultipleField(choices=my_choices, default=range(1, i + 1))
 
 
 class Run_JSNAPy:
     """ Execute the jsnapy script to snapshot a device """
     def __init__(self, args):
         """ Expects args from the flask form: hostname & pre/post tag """
-        with open("scripts/jsnapy_flask/settings.txt") as _f:
-            settings = _f.read()
-        settings = settings.split(',')
+        self.get_settings()
 
         # Initalize variables
         self.host = args.form['hostname']
         self.snap = args.form['snap']
-        self.username_value = settings[0]
-        self.password_value = settings[1]
-        self.testlocation_value = settings[2]
-        self.testfiles_value = settings[3]
+        self.username_value = self.settings[0]
+        self.password_value = self.settings[1]
+        self.testlocation_value = self.settings[2]
+        self.testfiles_value = self.settings[3]
         self.data = ""
         self.error = ""
-        self.review = ""
 
-        # Update config file with testfiles path specified in settings section
+        # Update the jsnapy.cfg file
+        self.update_config()
+
+        # Create the yaml config for jsnapy
+        self.make_dev_file()
+
+        # Run pre/post snapshot
+        self.route_args()
+
+    def get_settings(self):
+        with open('scripts/jsnapy_flask/settings.txt') as _f:
+            settings = _f.read()
+        self.settings = settings.split(',')
+
+    def update_config(self):
+        """ Update config file with testfiles path specified in settings section """
         with open('/etc/jsnapy/jsnapy.cfg') as _f:
             cfg = _f.read()
         cfg2 = ""
@@ -69,12 +80,6 @@ class Run_JSNAPy:
             cfg2 = cfg2 + line + "\n"
         with open('/etc/jsnapy/jsnapy.cfg', 'w') as _f:
             _f.write(cfg2)
-    
-        # Create the yaml config for jsnapy
-        self.make_dev_file()
-
-        # Run pre/post snapshot
-        self.route_args()
 
     def make_dev_file(self):
         """ Create yaml config with the host specified and login creds  """
@@ -99,7 +104,6 @@ class Run_JSNAPy:
         try:
             self.pre_snap = js.snap(self.template, "pre")
             self.data = 'Pre-check snapshot complete'
-            self.review = ""
         except:
             self.error = 'Error running snapshot'
             return
@@ -157,7 +161,7 @@ class UpdateSettings:
 jsnapy_flask_bp = Blueprint('jsnapy_flask', __name__, template_folder='templates', static_folder='static',
                             static_url_path='/jsnapy_flask/static')
 jsnapy_settings_bp = Blueprint('jsnapy_settings', __name__, template_folder='templates', static_folder='static',
-                            static_url_path='/jsnapy_flask/static')
+                               static_url_path='/jsnapy_flask/static')
 
 
 @jsnapy_flask_bp.route('/jsnapy_flask', methods=['GET', 'POST'])
@@ -169,7 +173,6 @@ def jsnapy_flask():
     elif request.method == 'POST':
         snapshot = Run_JSNAPy(request)
         results = {'data': snapshot.data,
-                   'verbose': snapshot.review,
                    'error': snapshot.error
                   }
         return jsonify(results)
