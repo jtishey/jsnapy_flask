@@ -18,25 +18,12 @@ import format_html
 
 class JSNAPy_Form(FlaskForm):
     """ Create the flask form """
-    with open("scripts/jsnapy_flask/settings.txt") as _f:
-        settings = _f.read()
-    settings = settings.split(',')
-    username_value = settings[0]
-    password_value = settings[1]
-    testfiles_value = settings[2]
-
     hostname = StringField('Hostname',
                            validators=[validators.DataRequired()])
-    username = StringField('username', validators=[validators.DataRequired()], default=username_value)
-    password = PasswordField('password', validators=[validators.DataRequired()], default=password_value)
-    test_location = StringField('test_location', validators=[validators.DataRequired()], default=testfiles_value)
-    my_choices = []
-    i = 0
-    yml_files = os.popen("ls " + testfiles_value + "*.yml").read()
-    for i, line in enumerate(yml_files.splitlines(), start=1):
-        line = line.replace(testfiles_value, '')
-        my_choices.append((line, line))
-    test_files = SelectMultipleField(choices=my_choices, default=range(1, i + 1))
+    username = StringField('username', validators=[validators.DataRequired()], default="")
+    password = PasswordField('password', validators=[validators.DataRequired()], default="")
+    test_location = StringField('test_location', validators=[validators.DataRequired()], default="")
+    test_files = SelectMultipleField()
 
 
 class Run_JSNAPy:
@@ -155,6 +142,22 @@ class UpdateSettings:
         with open('scripts/jsnapy_flask/settings.txt', "w") as _f:
             _f.write(jsettings)
 
+def generate_form_values(form):
+    """ Set values for settings form """
+    with open("scripts/jsnapy_flask/settings.txt") as _f:
+        settings = _f.read()
+    settings = settings.split(',')
+    my_choices = []
+    i = 0
+    yml_files = os.popen("ls " + settings[2] + "*.yml").read()
+    for i, line in enumerate(yml_files.splitlines(), start=1):
+        line = line.replace(settings[2], '')
+        my_choices.append((line, line))
+    form.username.data = settings[0]
+    form.password.data = settings[1]
+    form.test_location.data = settings[2]
+    form.test_files.choices = my_choices
+    return form
 
 # FLASK SECTION - Blueprint and Route - #
 
@@ -169,6 +172,7 @@ def jsnapy_flask():
     """ Run Juniper Snapshot Manager on a device """
     if request.method == 'GET':
         form = JSNAPy_Form()
+        form = generate_form_values(form)
         return render_template("jsnapy_flask.html", name="jsnapy", active_page="jsnapy", form=form)
     elif request.method == 'POST':
         snapshot = Run_JSNAPy(request)
