@@ -31,6 +31,9 @@
                 </div>
             </div>
 
+            <!-------------------->
+            <!--  SETTINGS DIV  -->
+            <!-------------------->
             <div id="settings-div">
                 <label for="username">Router Credentials</label>
                 <div id="settings_login">
@@ -47,6 +50,11 @@
                 <div id="settings_tests">
                     <label for="test_files">Test Files</label>
                     {{ form.test_files(class="form-control") }}
+                </div>
+                <br>
+                <div id="settings_port">
+                    <label for="port_num">Port Number</label>
+                    {{ form.port_num(class="form-control") }}
                 </div>
                 <br>
                 <div id="settings_update">

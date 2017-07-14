@@ -1,1 +1,17 @@
-guest,password,scripts/jsnapy_flask/testfiles/,  - test_bfd.yml
+guest,password,scripts/jsnapy_flask/testfiles/,  - test_alarms.yml
+  - test_bfd.yml
+  - test_bgp.yml
+  - test_core.yml
+  - test_fpc.yml
+  - test_interfaces.yml
+  - test_isis.yml
+  - test_krt.yml
+  - test_lacp.yml
+  - test_ldp.yml
+  - test_msdp.yml
+  - test_no_diff.yml
+  - test_ntp.yml
+  - test_pic_status.yml
+  - test_pim.yml
+  - test_rsvp.yml
+,830

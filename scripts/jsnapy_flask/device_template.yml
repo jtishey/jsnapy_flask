@@ -2,5 +2,5 @@ hosts:
   - device: SOME_HOST 
     username: SOME_USER
     passwd: SOME_PASS
-    #port: 22
+    port: SOME_PORT
 tests:

@@ -24,23 +24,22 @@ class JSNAPy_Form(FlaskForm):
     password = PasswordField('password', validators=[validators.DataRequired()], default="")
     test_location = StringField('test_location', validators=[validators.DataRequired()], default="")
     test_files = SelectMultipleField()
+    port_num = StringField('port', validators=[validators.DataRequired()], default="830")
 
 
 class Run_JSNAPy:
     """ Execute the jsnapy script to snapshot a device """
     def __init__(self, args):
         """ Expects args from the flask form: hostname & pre/post tag """
-        self.get_settings()
 
         # Initalize variables
         self.host = args.form['hostname']
         self.snap = args.form['snap']
-        self.username_value = self.settings[0]
-        self.password_value = self.settings[1]
-        self.testlocation_value = self.settings[2]
-        self.testfiles_value = self.settings[3]
         self.data = ""
         self.error = ""
+
+        # Read settings file and assign variables
+        self.settings = get_settings()
 
         # Update the jsnapy.cfg file
         self.update_config()
@@ -51,19 +50,14 @@ class Run_JSNAPy:
         # Run pre/post snapshot
         self.route_args()
 
-    def get_settings(self):
-        with open('scripts/jsnapy_flask/settings.txt') as _f:
-            settings = _f.read()
-        self.settings = settings.split(',')
-
     def update_config(self):
-        """ Update config file with testfiles path specified in settings section """
+        """ Update /etc/jsnapy.cfg file with testfiles path specified in settings section """
         with open('/etc/jsnapy/jsnapy.cfg') as _f:
             cfg = _f.read()
         cfg2 = ""
         for line in cfg.splitlines():
             if 'test_file_path = ' in line:
-                line = 'test_file_path = ' + self.testlocation_value
+                line = 'test_file_path = ' + self.settings['testlocation_value']
             cfg2 = cfg2 + line + "\n"
         with open('/etc/jsnapy/jsnapy.cfg', 'w') as _f:
             _f.write(cfg2)
@@ -73,10 +67,13 @@ class Run_JSNAPy:
         with open('./scripts/jsnapy_flask/device_template.yml') as f1:
             self.template = f1.read()
         self.template = self.template.replace('SOME_HOST', self.host)
-        self.template = self.template.replace('SOME_USER', self.username_value)
-        self.template = self.template.replace('SOME_PASS', self.password_value)
+        self.template = self.template.replace('SOME_USER', self.settings['username_value'])
+        self.template = self.template.replace('SOME_PASS', self.settings['password_value'])
+        self.template = self.template.replace('SOME_PORT', self.settings['port'])
         self.template = str(self.template)
-        self.template = self.template + self.testfiles_value
+        self.template = self.template + self.settings['testfiles_value']
+        with open('dev.yml', 'w') as _f:
+            _f.write(self.template)
 
     def route_args(self):
         """ Determines if the user wants a pre-check or post-check """
@@ -126,37 +123,71 @@ class Run_JSNAPy:
             post_log.append(str(line.getMessage()))
         self.data = format_html.formatting(post_log)
 
+def get_settings():
+    """ Open settings.txt and get values """
+    settings = {}
+    with open('scripts/jsnapy_flask/settings.txt') as _f:
+        s = _f.read()
+    s = s.split(',')
+    settings['username_value'] = s[0]
+    settings['password_value'] = s[1]
+    settings['testlocation_value'] = s[2]
+    settings['testfiles_value'] = s[3]
+    settings['port'] = s[4]
+    return settings
 
 class UpdateSettings:
     """ Update the settings file """
     def __init__(self, args):
         """ Expects args from the flask form: Username, Password & Testfiles Path """
-        username = str(args.form['username'])
-        password = str(args.form['password'])
-        test_loc = str(args.form['test_location'])
-        test_files = args.form.getlist('test_files', type=str)
-        test_list = ''
-        for item in test_files:
-            test_list = test_list + '  - ' + item + '\n'
-        jsettings = username + ',' + password + ',' + test_loc + "," + test_list
+        self.settings = get_settings()
+        self.username = str(args.form['username'])
+        self.password = str(args.form['password'])
+        self.test_loc = str(args.form['test_location'])
+        self.test_files = args.form.getlist('test_files', type=str)
+        self.port_num = str(args.form['port_num'])
+
+        self.format_password()
+        self.format_test_files()
+        self.format_port_number()
+        self.write_settings()
+
+    def format_password(self):
+        if self.password == "":
+            self.password = self.settings['password_value']
+
+    def format_test_files(self):
+        self.test_list = ''
+        if self.test_files == "":
+            self.test_files = settings['testfiles_value']
+        for item in self.test_files:
+            self.test_list = self.test_list + '  - ' + item + '\n'
+
+    def format_port_number(self):
+        if self.port_num == "":
+            self.port_num = "830"
+
+    def write_settings(self):
+        self.jsettings = self.username + ',' + self.password + ',' + self.test_loc + "," \
+            + self.test_list + "," + self.port_num
         with open('scripts/jsnapy_flask/settings.txt', "w") as _f:
-            _f.write(jsettings)
+            _f.write(self.jsettings)
+
 
 def generate_form_values(form):
     """ Set values for settings form """
-    with open("scripts/jsnapy_flask/settings.txt") as _f:
-        settings = _f.read()
-    settings = settings.split(',')
+    settings = get_settings()
     my_choices = []
     i = 0
-    yml_files = os.popen("ls " + settings[2] + "*.yml").read()
+    yml_files = os.popen("ls " + settings['testlocation_value'] + "*.yml").read()
     for i, line in enumerate(yml_files.splitlines(), start=1):
-        line = line.replace(settings[2], '')
+        line = line.replace(settings['testlocation_value'], '')
         my_choices.append((line, line))
-    form.username.data = settings[0]
-    form.password.data = settings[1]
-    form.test_location.data = settings[2]
+    form.username.data = settings['username_value']
+    form.password.data = settings['password_value']
+    form.test_location.data = settings['testlocation_value']
     form.test_files.choices = my_choices
+    form.port_num.data = settings['port']
     return form
 
 # FLASK SECTION - Blueprint and Route - #
@@ -187,5 +218,5 @@ def jsnapy_flask():
 @jsnapy_settings_bp.route('/jsnapy_settings', methods=['POST'])
 def jsnapy_settings():
     """ Run Juniper Snapshot Manager on a device """
-    settings = UpdateSettings(request)
+    UpdateSettings(request)
     return ""
