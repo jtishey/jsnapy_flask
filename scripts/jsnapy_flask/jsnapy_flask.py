@@ -64,16 +64,13 @@ class Run_JSNAPy:
 
     def make_dev_file(self):
         """ Create yaml config with the host specified and login creds  """
-        with open('./scripts/jsnapy_flask/device_template.yml') as f1:
-            self.template = f1.read()
-        self.template = self.template.replace('SOME_HOST', self.host)
-        self.template = self.template.replace('SOME_USER', self.settings['username_value'])
-        self.template = self.template.replace('SOME_PASS', self.settings['password_value'])
-        self.template = self.template.replace('SOME_PORT', self.settings['port'])
-        self.template = str(self.template)
-        self.template = self.template + self.settings['testfiles_value']
-        with open('dev.yml', 'w') as _f:
-            _f.write(self.template)
+        self.template = """hosts:
+  - device: """ + str(self.host) + """
+    username: """ + self.settings['username_value'] + """
+    passwd: """ + self.settings['password_value'] + """
+    port: """ + str(self.settings['port']) + """
+tests:
+""" + self.settings['testfiles_value']
 
     def route_args(self):
         """ Determines if the user wants a pre-check or post-check """
@@ -153,21 +150,25 @@ class UpdateSettings:
         self.write_settings()
 
     def format_password(self):
+        """ Use existing password if submitted one is blank """
         if self.password == "":
             self.password = self.settings['password_value']
 
     def format_test_files(self):
+        """ Make test list into a string and use previous if empty """
         self.test_list = ''
         if self.test_files == "":
-            self.test_files = settings['testfiles_value']
+            self.test_files = self.settings['testfiles_value']
         for item in self.test_files:
             self.test_list = self.test_list + '  - ' + item + '\n'
 
     def format_port_number(self):
+        """ Default port number for NETCONF 830 """
         if self.port_num == "":
             self.port_num = "830"
 
     def write_settings(self):
+        """ Write settings.txt file """
         self.jsettings = self.username + ',' + self.password + ',' + self.test_loc + "," \
             + self.test_list + "," + self.port_num
         with open('scripts/jsnapy_flask/settings.txt', "w") as _f:
@@ -176,9 +177,9 @@ class UpdateSettings:
 
 def generate_form_values(form):
     """ Set values for settings form """
-    settings = get_settings()
-    my_choices = []
     i = 0
+    my_choices = []
+    settings = get_settings()
     yml_files = os.popen("ls " + settings['testlocation_value'] + "*.yml").read()
     for i, line in enumerate(yml_files.splitlines(), start=1):
         line = line.replace(settings['testlocation_value'], '')
@@ -192,10 +193,10 @@ def generate_form_values(form):
 
 # FLASK SECTION - Blueprint and Route - #
 
-jsnapy_flask_bp = Blueprint('jsnapy_flask', __name__, template_folder='templates', static_folder='static',
-                            static_url_path='/jsnapy_flask/static')
-jsnapy_settings_bp = Blueprint('jsnapy_settings', __name__, template_folder='templates', static_folder='static',
-                               static_url_path='/jsnapy_flask/static')
+jsnapy_flask_bp = Blueprint('jsnapy_flask', __name__, template_folder='templates',
+                            static_folder='static', static_url_path='/jsnapy_flask/static')
+jsnapy_settings_bp = Blueprint('jsnapy_settings', __name__, template_folder='templates',
+                               static_folder='static', static_url_path='/jsnapy_flask/static')
 
 
 @jsnapy_flask_bp.route('/jsnapy_flask', methods=['GET', 'POST'])
