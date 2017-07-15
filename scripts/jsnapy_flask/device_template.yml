@@ -1,6 +1,0 @@
-hosts:
-  - device: SOME_HOST 
-    username: SOME_USER
-    passwd: SOME_PASS
-    port: SOME_PORT
-tests:
