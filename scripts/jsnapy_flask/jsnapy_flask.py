@@ -64,16 +64,13 @@ class Run_JSNAPy:
 
     def make_dev_file(self):
         """ Create yaml config with the host specified and login creds  """
-        with open('./scripts/jsnapy_flask/device_template.yml') as f1:
-            self.template = f1.read()
-        self.template = self.template.replace('SOME_HOST', self.host)
-        self.template = self.template.replace('SOME_USER', self.settings['username_value'])
-        self.template = self.template.replace('SOME_PASS', self.settings['password_value'])
-        self.template = self.template.replace('SOME_PORT', self.settings['port'])
-        self.template = str(self.template)
-        self.template = self.template + self.settings['testfiles_value']
-        with open('dev.yml', 'w') as _f:
-            _f.write(self.template)
+        self.template = """hosts:
+  - device: """ + str(self.host) + """
+    username: """ + self.settings['username_value'] + """
+    passwd: """ + self.settings['password_value'] + """
+    port: """ + str(self.settings['port']) + """
+tests:
+""" + self.settings['testfiles_value']
 
     def route_args(self):
         """ Determines if the user wants a pre-check or post-check """
