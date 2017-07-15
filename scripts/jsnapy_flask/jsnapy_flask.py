@@ -64,13 +64,13 @@ class Run_JSNAPy:
 
     def make_dev_file(self):
         """ Create yaml config with the host specified and login creds  """
-        self.template = """hosts:
-  - device: """ + str(self.host) + """
-    username: """ + self.settings['username_value'] + """
-    passwd: """ + self.settings['password_value'] + """
-    port: """ + str(self.settings['port']) + """
-tests:
-""" + self.settings['testfiles_value']
+        self.template = ("hosts:\n"
+                         "  - device: " + str(self.host) + "\n"
+                         "    username: " + self.settings['username_value'] + "\n"
+                         "    passwd: " + self.settings['password_value'] + "\n"
+                         "    port: " + str(self.settings['port']) + "\n"
+                         "tests:\n" +
+                         self.settings['testfiles_value'])
 
     def route_args(self):
         """ Determines if the user wants a pre-check or post-check """
