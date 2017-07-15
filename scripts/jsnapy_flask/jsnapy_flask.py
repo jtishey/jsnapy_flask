@@ -5,6 +5,7 @@ Requires JSNAPy, falsk, flask-wtf, probably other stuff
 github.com/jtishey/jsnapy_flask  2017
 """
 
+import base64
 import logging
 import os
 
@@ -125,6 +126,7 @@ def get_settings():
     settings = {}
     with open('scripts/jsnapy_flask/settings.txt') as _f:
         s = _f.read()
+    s = base64.b64decode(s)
     s = s.split(',')
     settings['username_value'] = s[0]
     settings['password_value'] = s[1]
@@ -171,8 +173,9 @@ class UpdateSettings:
         """ Write settings.txt file """
         self.jsettings = self.username + ',' + self.password + ',' + self.test_loc + "," \
             + self.test_list + "," + self.port_num
+        save_data = base64.b64encode(str(self.jsettings))
         with open('scripts/jsnapy_flask/settings.txt', "w") as _f:
-            _f.write(self.jsettings)
+            _f.write(save_data)
 
 
 def generate_form_values(form):

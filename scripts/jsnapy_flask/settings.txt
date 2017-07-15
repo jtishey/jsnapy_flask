@@ -1,17 +1,1 @@
-guest,password,scripts/jsnapy_flask/testfiles/,  - test_alarms.yml
-  - test_bfd.yml
-  - test_bgp.yml
-  - test_core.yml
-  - test_fpc.yml
-  - test_interfaces.yml
-  - test_isis.yml
-  - test_krt.yml
-  - test_lacp.yml
-  - test_ldp.yml
-  - test_msdp.yml
-  - test_no_diff.yml
-  - test_ntp.yml
-  - test_pic_status.yml
-  - test_pim.yml
-  - test_rsvp.yml
-,830
+Z3Vlc3QscGFzc3dvcmQsc2NyaXB0cy9qc25hcHlfZmxhc2svdGVzdGZpbGVzLywgIC0gdGVzdF9hbGFybXMueW1sCiAgLSB0ZXN0X2JmZC55bWwKICAtIHRlc3RfYmdwLnltbAogIC0gdGVzdF9jb3JlLnltbAogIC0gdGVzdF9mcGMueW1sCiAgLSB0ZXN0X2ludGVyZmFjZXMueW1sCiAgLSB0ZXN0X2lzaXMueW1sCiAgLSB0ZXN0X2tydC55bWwKICAtIHRlc3RfbGFjcC55bWwKICAtIHRlc3RfbGRwLnltbAogIC0gdGVzdF9tc2RwLnltbAogIC0gdGVzdF9ub19kaWZmLnltbAogIC0gdGVzdF9udHAueW1sCiAgLSB0ZXN0X3BpY19zdGF0dXMueW1sCiAgLSB0ZXN0X3BpbS55bWwKICAtIHRlc3RfcnN2cC55bWwKLDgzMA==
