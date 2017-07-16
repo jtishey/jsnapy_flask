@@ -1,0 +1,5 @@
+tests_include:
+  - check_config
+
+check_config:
+  - command:  show configuration | display set
