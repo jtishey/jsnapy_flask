@@ -24,7 +24,7 @@ class JSNAPy_Form(FlaskForm):
     username = StringField('username', validators=[validators.DataRequired()], default="")
     password = PasswordField('password', validators=[validators.DataRequired()], default="")
     test_location = StringField('test_location', validators=[validators.DataRequired()], default="")
-    test_files = SelectMultipleField()
+    test_files = SelectMultipleField(coerce=int)
     port_num = StringField('port', validators=[validators.DataRequired()], default="830")
 
 
@@ -186,11 +186,12 @@ def generate_form_values(form):
     yml_files = os.popen("ls " + settings['testlocation_value'] + "*.yml").read()
     for i, line in enumerate(yml_files.splitlines(), start=1):
         line = line.replace(settings['testlocation_value'], '')
-        my_choices.append((line, line))
+        my_choices.append((i, line))
     form.username.data = settings['username_value']
     form.password.data = settings['password_value']
     form.test_location.data = settings['testlocation_value']
     form.test_files.choices = my_choices
+    form.test_files.data = range(1, (i+1))
     form.port_num.data = settings['port']
     return form
 
