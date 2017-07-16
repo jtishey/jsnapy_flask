@@ -86,8 +86,8 @@ class Run_JSNAPy:
         try:
             self.pre_snap = js.snap(self.template, "pre")
             self.data = 'Pre-check snapshot complete'
-        except:
-            self.error = 'Error running snapshot'
+        except Exception as ex:
+            self.error = str(ex.args) + "\n" + str(ex.message)
             return
 
     def post_check(self):
@@ -95,8 +95,8 @@ class Run_JSNAPy:
         js = SnapAdmin()
         try:
             self.post_snap = js.snap(self.template, "post")
-        except:
-            self.error = "Error running snapshot"
+        except Exception as ex:
+            self.error = str(ex.args) + "\n" + str(ex.message)
             return
         self.post_compare()
 
