@@ -15,14 +15,9 @@ Flask web app for Juniper JSNAPy (Junos Snapshot Administrator).  Allows you to 
 `sudo -H /usr/bin/pip install Flask` <br>
 `sudo -H /usr/bin/pip install flask-wtf` <br>
 
-### 2. After install do one of the following:
-   * Copy the yaml files from the `./scripts/jsnapy_flask/testfiles` direcotry to `/etc/jsnapy/testfiles/`
-   * Edit `/etc/jsnapy/jsnapy.cfg` to point the testfiles directory to where you have `./scripts/jsnapy_flask/testfiles`
-
-### 3. Edit the scripts/jsnapy_flask/device_template.yml file to edit credentials and which testfiles to run.
-
-### 4. To run pre and post change snapshots:
+### 2. To run jsnapy_flask
 1. Run with `python app.py`
+2. Click the settings icon to update the credentials and selected testfiles/location and click Update.
 2. Take a pre-change snapshot by entering a hostnaame/IP, selecting Pre, and clicking Submit.
 3. Take a post-change snapshot by entering the same hostname/IP, selecting Post, and clicking Submit.
    * Once the post snapshot is complete, it will be compared with the pre-change snapshot and output displayed.
@@ -31,6 +26,12 @@ Flask web app for Juniper JSNAPy (Junos Snapshot Administrator).  Allows you to 
    * Grey = All test skipped (nothing found to test)
 4. Click on each section to expand
 <br>
+
+
+#### Settings View
+![settings_view](static/images/settings_view.png "settings_view")
+
+
 
 #### See also:
 Juniper/JSNAPy:<br>
