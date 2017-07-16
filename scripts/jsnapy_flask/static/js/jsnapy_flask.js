@@ -3,7 +3,7 @@ $(document).ready(function(){
     $('.pass-child').hide();
     $('.fail-child').hide();
     $('.skip-child').hide();
-
+    
     // Hide settings section
     $('#settings-div').hide()
 
