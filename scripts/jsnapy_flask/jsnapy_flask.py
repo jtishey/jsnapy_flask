@@ -24,7 +24,7 @@ class JSNAPy_Form(FlaskForm):
     username = StringField('username', validators=[validators.DataRequired()], default="")
     password = PasswordField('password', validators=[validators.DataRequired()], default="")
     test_location = StringField('test_location', validators=[validators.DataRequired()], default="")
-    test_files = SelectMultipleField(coerce=int)
+    test_files = SelectMultipleField()
     port_num = StringField('port', validators=[validators.DataRequired()], default="830")
 
 
@@ -143,7 +143,7 @@ class UpdateSettings:
         self.username = str(args.form['username'])
         self.password = str(args.form['password'])
         self.test_loc = str(args.form['test_location'])
-        self.test_files = args.form.getlist('test_files', type=str)
+        self.test_files = args.form.getlist('test_files')
         self.port_num = str(args.form['port_num'])
 
         self.format_password()
@@ -180,18 +180,19 @@ class UpdateSettings:
 
 def generate_form_values(form):
     """ Set values for settings form """
-    i = 0
     my_choices = []
+    my_selected = []
     settings = get_settings()
     yml_files = os.popen("ls " + settings['testlocation_value'] + "*.yml").read()
-    for i, line in enumerate(yml_files.splitlines(), start=1):
+    for line in yml_files.splitlines():
         line = line.replace(settings['testlocation_value'], '')
-        my_choices.append((i, line))
+        my_choices.append((line, line))
+        my_selected.append(line)
     form.username.data = settings['username_value']
     form.password.data = settings['password_value']
     form.test_location.data = settings['testlocation_value']
     form.test_files.choices = my_choices
-    form.test_files.data = range(1, (i+1))
+    form.test_files.data = my_selected
     form.port_num.data = settings['port']
     return form
 
