@@ -116,7 +116,7 @@ check_int_ext:
         tests:
           - is-equal: input-error-list/input-discards, 0
             info: "Test Passed!! Interface {{post['name']}} has no input discard errors"
-            err: "Test Failed!! Interface {{post['name']}} has {{post['input-error-list/input-discards']}} input discard errors (had {{pre['input-error-list/input-discards']}}) pre-check"
+            err: "Test Failed!! Interface {{post['name']}} has {{post['input-error-list/input-discards']}} input discard errors (had {{pre['input-error-list/input-discards']}} pre-check)"
 
     - iterate:
         xpath: //interface-information/physical-interface[normalize-space(oper-status)="up" and input-error-list/input-l3-incompletes]
