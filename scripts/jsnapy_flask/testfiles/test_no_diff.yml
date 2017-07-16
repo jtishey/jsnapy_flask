@@ -1,9 +1,0 @@
-test_command_version:
-  - command: show interfaces terse 
-  - iterate:
-      xpath: physical-interface
-      id: './name'
-      tests:
-        - no-diff: oper-status 
-          err: "Test Failed!! oper-status for {{pre['name']}} was {{pre['oper-status']}}, now it is {{post['oper-status']}}"
-          info: "Test Passed!! oper-status for {{pre['name']}} matches the pre-check" 

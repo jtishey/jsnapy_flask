@@ -1,7 +1,7 @@
 tests_include:
-  - check_core
+  - check_core_dumps
 
-check_core:
+check_core_dumps:
   - command: show system core-dumps
   - iterate:
       xpath: //directory-list
