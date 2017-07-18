@@ -190,8 +190,6 @@ def generate_form_values(form):
     for line in settings['testfiles_value'].splitlines():
         line = line.replace('  - ', '').rstrip()
         my_selected.append(line)
-    with open("test_out.txt", "w")as _f:
-        _f.write(str(my_selected))
     form.username.data = settings['username_value']
     form.password.data = settings['password_value']
     form.test_location.data = settings['testlocation_value']
