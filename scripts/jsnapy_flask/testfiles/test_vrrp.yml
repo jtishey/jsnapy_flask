@@ -1,0 +1,13 @@
+tests_include:
+  - show_vrrp_summary
+
+show_vrrp_summary:
+  - command:  show vrrp summary
+  - ignore-null: True
+  - iterate:
+      xpath: //vrrp-information/vrrp-interface
+      id: interface
+      tests:
+        - no-diff: vrrp-state
+          info: "PASSED!  VRRP state for {{id_0}} is still {{pre['vrrp-state']}}"
+          err: "FAILED!  VRRP state for {{id_0}} changed from {{pre['vrrp-state']}} to {{post['vrrp-state']}}"
