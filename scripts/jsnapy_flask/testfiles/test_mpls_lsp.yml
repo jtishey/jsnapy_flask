@@ -1,0 +1,13 @@
+tests_include:
+  - show_mpls_lsp
+
+show_mpls_lsp:
+  - command:  show mpls lsp
+  - ignore-null: True
+  - iterate:
+      xpath: //mpls-lsp-information/rsvp-session-data
+      id: './session-type'
+      tests:
+        - no-diff: up-count
+          info: "PASSED!  Number of {{id_0}} LSPs up is still {{pre['up-count']}}"
+          err: "FAILED!  Number of {{id_0}} LSPs up changed from {{pre['up-count']}} to {{post['up-count']}}"
