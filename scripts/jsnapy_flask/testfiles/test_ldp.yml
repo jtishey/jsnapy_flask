@@ -1,5 +1,6 @@
 tests_include:
   - show_ldp_interface
+  - show_ldp_session
 
 show_ldp_interface:
   - command:  show ldp interface
@@ -10,3 +11,17 @@ show_ldp_interface:
         - is-equal: ldp-neighbor-count, 1
           info: "PASSED! Interface {{id_0}} LDP neighbor count  {{post['ldp-neighbor-count']}}"
           err: "FAILED! Interface {{id_0}} LDP neighbor count {{post['ldp-neighbor-count']}}"
+
+show_ldp_session:
+  - command:  show ldp session
+  - iterate:
+      xpath: //ldp-session-information/ldp-session
+      id: ldp-neighbor-address
+      tests:
+        - no-diff: ldp-session-state
+          info: "PASSED! LDP session to id{{0}} is still {{pre['ldp-session-state']}}"
+          err: "FAILED! LDP session to id{{0}} changed from {{pre['ldp-session-state']}} to {{post['ldp-session-state']}}"
+
+        - no-diff: ldp-connection-state
+          info: "PASSED! LDP session to id{{0}} is still {{pre['ldp-connection-state']}}"
+          err: "FAILED! LDP connection to id{{0} changed from {{pre['ldp-connection-state']}} to {{post['ldp-connection-state']}}"
