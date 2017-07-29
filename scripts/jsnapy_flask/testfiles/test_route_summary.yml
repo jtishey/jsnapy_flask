@@ -1,0 +1,13 @@
+tests_include:
+  - show_route_summary
+
+show_route_summary:
+  - command:  show route summary
+  - ignore-null: True
+  - iterate:
+      xpath: //route-summary-information/route-table
+      id: './table-name'
+      tests:
+        - no-diff: active-route-count
+          info: "PASSED!  {{id_0}} active routes is still {{pre['active-route-count']}}"
+          err: "FAILED!  {{id_0}} active routes changed from {{pre['active-route-count']}} to {{post['active-route-count']}}"
