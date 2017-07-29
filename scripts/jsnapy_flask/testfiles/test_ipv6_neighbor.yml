@@ -1,0 +1,12 @@
+tests_include:
+  - show_ipv6_neighbors
+
+show_ipv6_neighbors:
+  - command:  show ipv6 neighbors
+  - iterate:
+      xpath: //ipv6-nd-information/ipv6-nd-entry
+      id: './ipv6-nd-neighbor-address'
+      tests:
+        - no-diff: ipv6-nd-interface-name
+          info: "PASSED!  IPv6 neighbor {{id_0}} still on {{pre['ipv6-nd-interface-name']}}"
+          err: "FAILED!  IPv6 neighbor {{id_0}} was on {{pre['ipv6-nd-interface-name']}} and is now {{post['ipv6-nd-interface-name']}}"
