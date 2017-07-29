@@ -1,7 +1,8 @@
 tests_include:
-  - rsvp-interface
+  - show_rsvp_interface
+  - show_rsvp_session
 
-rsvp-interface:
+show_rsvp_interface:
   - command: show rsvp interface
   - ignore-null: True
   - iterate:
@@ -18,3 +19,14 @@ rsvp-interface:
         - no-diff: subscription 
           err: 'FAILED!  RSVP interface {{pre["interface-name"]}} has {{post["active-reservation"]}} active-reservations, before it had {{pre["active-reservation"]}}'
           info: 'PASSED!  RSVP interface {{pre["interface-name"]}} still has {{pre["active-reservation"]}} active-reservations'
+
+show_rsvp_session:
+  - command: show rsvp session
+  - ignore-null: True
+  - iterate:
+      xpath: //rsvp-session-information/rsvp-session-data/rsvp-session
+      id: './destination-address'
+      tests:
+        - no-diff: lsp-state
+          info: "PASSED!  RSVP session {{id_0}} is still {{pre['lsp-state']}}"
+          err: "FAILED!  RSVP session {{id_0}} changed from {{pre['lsp-state']}} to {{post['lsp-state']}}"
