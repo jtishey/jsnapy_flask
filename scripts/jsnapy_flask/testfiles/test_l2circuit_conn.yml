@@ -6,8 +6,8 @@ show_l2circuit_connections:
   - ignore-null: True
   - iterate:
       xpath: //l2circuit-connection-information/l2circuit-neighbor
-      id: './neighbor-address'
+      id: 'neighbor-address'
       tests:
-        - no-diff: connection-status
-          info: "PASSED!  {{id_0}} still has {{pre['vc-up-count']}} VCs up"
-          err: "FAuLED!  {{ud_0}} changed from {{pre['vc-up-count']}} VCs up to {{post['vc-up-count']}}"
+        - no-diff: connections-summary/vc-up-count 
+          info: "PASSED!  {{id_0}} still has {{pre['connections-summary/vc-up-count']}} VCs up"
+          err: "FAuLED!  {{ud_0}} changed from {{pre['connections-summary/vc-up-count']}} VCs up to {{post['connections-summary/vc-up-count']}}"
