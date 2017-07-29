@@ -1,0 +1,13 @@
+test_chassis_hardware:
+  - command: show chassis hardware
+  - iterate:
+      xpath: chassis/chassis-module
+      id: './name'
+      tests:
+        - no-diff: part-number
+          err: "Test Failed!! {{id_0}} part number changed from {{pre['part-number']}} to {{post['part-number']}}"
+          info: "Test Passed!! {{id_0}} part number is still {{pre['part-number']}}"
+
+        - no-diff: model-number 
+          err: "Test Failed!! {{id_0}} model number changed from {{pre['model-number']}} to {{post['model-number']}}"
+          info: "Test Passed!! {{id_0}} model number is still {{pre['model-number']}}"
