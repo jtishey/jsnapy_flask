@@ -42,7 +42,31 @@ def restrict_raw_diffs(post_log):
             post_log.pop(i)
             for diff_line in output:
                 post_log.insert(i, diff_line)
+        if ' bps' in line:
+            post_log[i] = str(readable_rates(line))
     return post_log
+
+
+def readable_rates(line):
+    for i, word in enumerate(line.split()):
+        if word == 'bps':
+            rate = line.split()[i-1].split('.')[0]
+            x = int(rate)
+            num = len(str(rate))
+            if num < 4:                                # < 4 digits = bits
+                read_rate = str(x) + " bps"
+            elif num < 7:                              # < 7 digits = Kilobits
+                x = x / 1000.0
+                read_rate = str("%.1f" + " Kbps") % x
+            elif num < 10:                             # < 10 digits = Megabits
+                x = x / 1000000.0
+                read_rate = str("%.1f" + " Mbps") % x
+            else:
+                x = x / 1000000000.0                   # 10+ digits = Gigabits
+                read_rate = str("%.1f" + " Gbps") % x
+            rep = str(rate + '.0 ' + 'bps')
+            line = str(line.replace(rep, str(read_rate)))
+            return line
 
 
 def line_filter(line):

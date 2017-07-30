@@ -9,9 +9,9 @@ show_interface:
         id: './name'
         tests:
           - delta: traffic-statistics/input-bps, 40%
-            info: "Test Passed!!  Interface {{id_0}} input traffic is within 40% of pre-check {{post['traffic-statistics/input-bps']}}bps"
-            err: "Test Failed!!  Interface {{id_0}} input traffic >40% change from {{pre['traffic-statistics/input-bps']}}bps to {{post['traffic-statistics/input-bps']}}bps"
+            info: "Test Passed!!  Interface {{id_0}} input traffic is within 40% of pre-check {{post['traffic-statistics/input-bps']}} bps"
+            err: "Test Failed!!  Interface {{id_0}} input traffic >40% change from {{pre['traffic-statistics/input-bps']}} bps to {{post['traffic-statistics/input-bps']}} bps"
 
           - delta: traffic-statistics/output-bps, 40%
-            info: "Test Passed!!  Interface {{id_0}}  output traffic is within 40% of pre-check {{post['traffic-statistics/output-bps']}}bps"
-            err: "Test Failed!!  Interface {{id_0}} output traffic >40% change from {{pre['traffic-statistics/output-bps']}}bps to {{post['traffic-statistics/output-bps']}}bps"
+            info: "Test Passed!!  Interface {{id_0}}  output traffic is within 40% of pre-check {{post['traffic-statistics/output-bps']}} bps"
+            err: "Test Failed!!  Interface {{id_0}} output traffic >40% change from {{pre['traffic-statistics/output-bps']}} bps to {{post['traffic-statistics/output-bps']}} bps"
