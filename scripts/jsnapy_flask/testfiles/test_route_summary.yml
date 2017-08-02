@@ -9,5 +9,5 @@ show_route_summary:
       id: './table-name'
       tests:
         - delta: active-route-count, 5%
-          info: "PASSED!  {{id_0}} active routes is still {{pre['active-route-count']}}"
+          info: "PASSED!  {{id_0}} active routes is still within 5% of {{pre['active-route-count']}} with {{post['active-route-count']}}"
           err: "FAILED!  {{id_0}} active routes changed >5% from {{pre['active-route-count']}} to {{post['active-route-count']}}"
