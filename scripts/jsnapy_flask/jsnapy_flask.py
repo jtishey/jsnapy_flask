@@ -52,15 +52,16 @@ class Run_JSNAPy:
         self.route_args()
 
     def update_config(self):
-        """ Update /etc/jsnapy.cfg file with testfiles path specified in settings section """
-        with open('/etc/jsnapy/jsnapy.cfg') as _f:
+        """ Update jsnapy.cfg file with testfiles path specified in settings section """
+        jsnapy_config = get_jsnapy_config()
+        with open(jsnapy_config) as _f:
             cfg = _f.read()
         cfg2 = ""
         for line in cfg.splitlines():
             if 'test_file_path = ' in line:
                 line = 'test_file_path = ' + self.settings['testlocation_value']
             cfg2 = cfg2 + line + "\n"
-        with open('/etc/jsnapy/jsnapy.cfg', 'w') as _f:
+        with open(jsnapy_config, 'w') as _f:
             _f.write(cfg2)
 
     def make_dev_file(self):
@@ -134,6 +135,15 @@ def get_settings():
     settings['testfiles_value'] = s[3]
     settings['port'] = s[4]
     return settings
+
+def get_jsnapy_config():
+    """ Open jsnapy.cfg file """
+    if os.environ.has_key('VIRTUAL_ENV'):
+        jsnapy_config = os.environ['VIRTUAL_ENV'] + '/etc/jsnapy/jsnapy.cfg'
+        if os.path.exists(jsnapy_config):
+            return jsnapy_config
+    jsnapy_config = '/etc/jsnapy/jsnapy.cfg'
+    return jsnapy_config
 
 class UpdateSettings:
     """ Update the settings file """
