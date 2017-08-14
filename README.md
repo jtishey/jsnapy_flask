@@ -1,5 +1,5 @@
 # jsnapy_flask
-Flask web app for Juniper JSNAPy (Junos Snapshot Administrator).  Allows you to take a before and after snapshot to be used for verifying services after making a change to a Juniper device.<br>
+Flask web app for Juniper JSNAPy (Junos Snapshot Administrator).  Allows you to take a before and after snapshots to be used for verifying services after making a change to a Juniper device.<br>
 
 *Only tested on Ubuntu/Debian-based Linux distros.*
 
@@ -11,9 +11,7 @@ Flask web app for Juniper JSNAPy (Junos Snapshot Administrator).  Allows you to 
 
 ### 1. Requires python2.7, Flask, flask-wtf, & jsnapy (and their dependencies)
 `sudo apt-get install build-essential libssl-dev libffi-dev python-dev` <br>
-`sudo -H /usr/bin/pip install jsnapy` <br>
-`sudo -H /usr/bin/pip install Flask` <br>
-`sudo -H /usr/bin/pip install flask-wtf` <br>
+`sudo pip install jsnapy Flask flask-wtf` <br>
 
 ### 2. To run jsnapy_flask
 1. Run with `python app.py`
@@ -24,7 +22,7 @@ Flask web app for Juniper JSNAPy (Junos Snapshot Administrator).  Allows you to 
    * Green = All tests passed/skipped
    * Red = A test has failed
    * Grey = All test skipped (nothing found to test)
-4. Click on each section to expand
+4. Click on each section to expand tests/details
 <br>
 
 
