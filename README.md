@@ -24,7 +24,7 @@ Flask web app for Juniper JSNAPy (Junos Snapshot Administrator).  Allows you to 
    * Grey = All test skipped (nothing found to test)
 4. Click on each section to expand tests/details
 <br>
-
+ 
 
 #### Settings View
 ![settings_view](static/images/settings_view.png "settings_view")
