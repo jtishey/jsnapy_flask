@@ -8,10 +8,10 @@ show_interface:
         xpath: //interface-information/physical-interface[normalize-space(admin-status)="up" and logical-interface/address-family/address-family-name]
         id: './name'
         tests:
-          - delta: traffic-statistics/input-bps, 75%
-            info: "Test Passed!!  Interface {{id_0}} input traffic is within 75% of pre-check {{post['traffic-statistics/input-bps']}} bps"
-            err: "Test Failed!!  Interface {{id_0}} input traffic >75% change from {{pre['traffic-statistics/input-bps']}} bps to {{post['traffic-statistics/input-bps']}} bps"
+          - delta: traffic-statistics/input-bps, 500%
+            info: "Test Passed!!  Interface {{id_0}} input traffic is within 500% of pre-check {{post['traffic-statistics/input-bps']}} bps"
+            err: "Test Failed!!  Interface {{id_0}} input traffic >500% change from {{pre['traffic-statistics/input-bps']}} bps to {{post['traffic-statistics/input-bps']}} bps"
 
-          - delta: traffic-statistics/output-bps, 75%
-            info: "Test Passed!!  Interface {{id_0}}  output traffic is within 75% of pre-check {{post['traffic-statistics/output-bps']}} bps"
-            err: "Test Failed!!  Interface {{id_0}} output traffic >75% change from {{pre['traffic-statistics/output-bps']}} bps to {{post['traffic-statistics/output-bps']}} bps"
+          - delta: traffic-statistics/output-bps, 500%
+            info: "Test Passed!!  Interface {{id_0}}  output traffic is within 500% of pre-check {{post['traffic-statistics/output-bps']}} bps"
+            err: "Test Failed!!  Interface {{id_0}} output traffic >500% change from {{pre['traffic-statistics/output-bps']}} bps to {{post['traffic-statistics/output-bps']}} bps"
