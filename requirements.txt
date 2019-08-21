@@ -29,5 +29,5 @@ pyserial==3.3
 PyYAML==3.12
 scp==0.10.2
 six==1.10.0
-Werkzeug==0.12.2
+Werkzeug==0.15.3
 WTForms==2.1
