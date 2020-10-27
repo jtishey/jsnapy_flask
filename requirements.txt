@@ -4,7 +4,7 @@ cffi==1.13.2
 Click==7.0
 colorama==0.4.3
 configparser==3.5.0b2
-cryptography==2.6.1
+cryptography==3.2
 entrypoints==0.3
 enum34==1.1.6
 Flask==1.1.1
