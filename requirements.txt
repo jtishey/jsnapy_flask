@@ -23,7 +23,7 @@ MarkupSafe==1.1.1
 mercurial==4.8.2
 ncclient==0.6.7
 netaddr==0.7.19
-paramiko==2.7.1
+paramiko==2.10.1
 pycparser==2.19
 pycrypto==2.6.1
 PyGObject==3.30.4
